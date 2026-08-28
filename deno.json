@@ -1,0 +1,42 @@
+{
+  "name": "@nashaddams/tmdb",
+  "version": "0.1.0",
+  "license": "MIT",
+  "exports": {
+    "./v3": "./src/v3/mod.ts",
+    "./v4": "./src/v4/mod.ts"
+  },
+  "imports": {
+    "@std/assert/equals": "jsr:@std/assert@1.0.13/equals",
+    "@std/text": "jsr:@std/text@1.0.15",
+    "@ts-morph/ts-morph": "jsr:@ts-morph/ts-morph@26.0.0"
+  },
+  "tasks": {
+    "lint": "deno lint && deno fmt --check && deno publish --dry-run --allow-dirty",
+    "generate:v3": "deno run -A codegen/v3/generate.ts",
+    "generate:v4": "deno run -A codegen/v4/generate.ts",
+    "generate": {
+      "command": "deno fmt src/v3/mod.ts src/v4/mod.ts",
+      "dependencies": ["generate:v3", "generate:v4"]
+    },
+    "test": "deno test --coverage",
+    "test:report": {
+      "command": "deno run -A jsr:@std/http/file-server coverage/html",
+      "dependencies": ["test"]
+    },
+    "docs": "deno doc --html src/v3/mod.ts src/v4/mod.ts",
+    "docs:report": {
+      "command": "deno run -A jsr:@std/http/file-server docs",
+      "dependencies": ["docs"]
+    }
+  },
+  "lock": false,
+  "publish": {
+    "include": [
+      "src/v3/mod.ts",
+      "src/v4/mod.ts",
+      "LICENSE",
+      "README.md"
+    ]
+  }
+}
